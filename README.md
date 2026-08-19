@@ -1,6 +1,6 @@
 # interview-prep
 
-면접 질문 은행과 간격 반복 진도.
+면접 질문을 간격 반복으로 훈련한 기록.
 
 <!-- IV-DASHBOARD:START -->
 ## 면접 질문 진도
