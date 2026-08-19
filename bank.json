@@ -1,0 +1,754 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "동기 통신과 비동기 통신은 무엇이 다른가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-15",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "기다림 여부는 맞췄으나 I/O 모델 관점 답변. 시스템 간 통신 관점(시간적 디커플링, 장애 전파/격리, 브로커 완충)이 빠짐"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Queue와 Pub/Sub은 어떤 상황에서 다른가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-15",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "메커니즘 방향은 맞으나 '1회 소비 vs fan-out' 대비를 명시 못함, 사용 상황(작업 분산 vs 다중 관심사 이벤트) 누락"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "ACK는 왜 필요한가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-15",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "재처리 목적은 이해했으나 ACK 방향을 반대로 설명(완료 신호인데 미완료 신호로). at-least-once 보장과의 연결 누락"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Consumer가 ACK 전에 장애가 발생하면 무엇이 일어나는가?",
+      "topic": "messaging",
+      "stage": 2,
+      "due": "2026-08-25",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "correct",
+          "stage_before": 0,
+          "stage_after": 1,
+          "note": "재전달 핵심 정답. 감지 방식(연결 끊김/visibility timeout)과 '처리 완료 후 ACK 직전 사망 → 중복 처리' 연결은 보강 여지"
+        },
+        {
+          "date": "2026-08-18",
+          "verdict": "correct",
+          "stage_before": 1,
+          "stage_after": 2,
+          "note": "재전달→at-least-once→중복→Inbox 사슬 완결. 용어만 '인덱스 커밋'→오프셋 커밋 교정"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "같은 Message가 두 번 전달될 수 있는 이유는 무엇인가?",
+      "topic": "messaging",
+      "stage": 1,
+      "due": "2026-08-21",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "correct",
+          "stage_before": 0,
+          "stage_after": 1,
+          "note": "ACK 미도달 + 브로커의 불가지성 핵심 정답. producer 재발행 중복과 at-least-once 트레이드오프 프레이밍은 보강 여지"
+        },
+        {
+          "date": "2026-08-18",
+          "verdict": "partial",
+          "stage_before": 1,
+          "stage_after": 1,
+          "note": "컨슈머 측 오프셋 커밋 실패 경로만. 프로듀서 재시도(ACK 유실)·리밸런싱 경로 누락. '프로듀서/컨슈머 양쪽'으로 갈라 답하는 틀 필요"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "At-Least-Once는 무엇을 의미하는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-15",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "정의(최소 1회 보장, 중복 O 유실 X)는 정확. 다만 중복 발생 메커니즘(ack 유실/처리 후 ack 전 크래시 → broker 재전송) 미언급, 그리고 소비자 중복 방지를 Outbox로 답해 Inbox/Idempotent Consumer와 혼동"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "Exactly-Once라는 표현을 그대로 믿으면 위험한 이유는 무엇인가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-15",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-14",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "delivery vs processing 구분(전달은 중복 가능, 처리를 한 번만)은 짚음. 그러나 '왜 위험한가'의 실체 미답 — (1)Exactly-Once Delivery는 원리적 불가(ack 유실 구분 불가), (2)Kafka EOS는 Kafka 내부 read-process-write 한정이고 외부 사이드이펙트(결제/DB/메일)는 보장 밖, (3)멱등성은 여전히 앱 책임. 유도 질문에도 답 못 함"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "Idempotent Consumer는 어떻게 만드는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-19",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-18",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "Inbox 패턴은 짚었으나 '처리+기록 원자적 커밋'이 빠짐(핵심 함정). dedup key 출처(프로듀서 발급), 자연 멱등 설계(UPSERT/조건부 UPDATE) 대안도 누락"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "Retry를 즉시 무한 반복하면 왜 위험한가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-19",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-18",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "head-of-line blocking은 정확히 짚음('무한' 쪽). '즉시' 쪽 위험(백오프 부재→부하 증폭/retry storm→죽어가는 서비스 완전 다운, 리소스 고갈) 누락. 처방 3종(backoff+jitter/최대횟수+DLQ/circuit breaker)도 없음"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "DLQ는 어떤 역할을 하는가?",
+      "topic": "messaging",
+      "stage": 1,
+      "due": "2026-08-21",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-18",
+          "verdict": "correct",
+          "stage_before": 0,
+          "stage_after": 1,
+          "note": "DLT 용어 정확. 격리+재처리 축 짚음. 보강: '흐름 복구'가 본질(head-of-line 해소), 실패 메타데이터 동봉, DLQ 적재량 알람"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "Message 순서는 어디까지 보장해야 하는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-20",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-19",
+          "verdict": "wrong",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "백지. 파티션 키 단위 순서 보장 / 전역 순서의 확장성 비용 / 재시도·병렬 처리로 깨지는 지점 / 버전 기반 멱등 설계 — 전부 미회상"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "Event Schema 변경은 왜 위험한가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-20",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-19",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "의존하는 쪽이 깨진다는 방향은 잡음. 주체를 Kafka로 오인(브로커는 스키마 무관, 컨슈머가 의존). 큐에 남은 옛 포맷 메시지/리플레이, 프로듀서·컨슈머 개별 배포, 컨슈머 미상, 하위 호환 규칙·Schema Registry 미언급"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "DB 저장과 Message 발행 사이에는 왜 Dual Write 문제가 발생하는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-20",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-19",
+          "verdict": "partial",
+          "stage_before": 0,
+          "stage_after": 0,
+          "note": "원인(두 시스템, 원자성 부재, 부분 실패 불일치)은 정확. 해법을 Saga로 오인 — Saga는 서비스 간 비즈니스 트랜잭션이고 Dual Write 해법은 Outbox(쓰는 곳을 DB 하나로 축소). 순서를 바꿔도 안 되는 이유·메시지 회수 불가·2PC 기피 이유 미언급"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "Transactional Outbox는 어떤 문제를 해결하는가?",
+      "topic": "messaging",
+      "stage": 1,
+      "due": "2026-08-22",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-19",
+          "verdict": "correct",
+          "stage_before": 0,
+          "stage_after": 1,
+          "note": "정답이나 직전 #13 해설에서 Outbox를 설명한 직후라 오염됨 — 다음 복습에서 백지 재검증 필요. Message Relay(폴링/CDC)와 at-least-once(중복 잔존)는 미언급"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "Outbox만 구현하면 중복 처리가 해결되는가?",
+      "topic": "messaging",
+      "stage": 1,
+      "due": "2026-08-22",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": [
+        {
+          "date": "2026-08-19",
+          "verdict": "correct",
+          "stage_before": 0,
+          "stage_after": 1,
+          "note": "컨슈머 측 중복(오프셋 커밋 실패)과 Inbox 해법 정확. 프로듀서 측 중복(릴레이 재발행)과 Inbox 기록을 비즈니스 로직과 같은 트랜잭션에 묶어야 한다는 점은 미언급"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "Inbox Pattern은 왜 필요한가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 17,
+      "text": "Queue가 계속 쌓인다면 무엇부터 확인해야 하는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 18,
+      "text": "AI Agent가 같은 Tool을 두 번 실행하면 어떻게 막을 것인가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 19,
+      "text": "Producer와 Consumer는 각각 어떤 책임을 지며 어떻게 결합도를 낮추는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 20,
+      "text": "Queue와 Topic은 구독 모델 관점에서 무엇이 다른가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 21,
+      "text": "Transaction은 왜 필요한가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 22,
+      "text": "Transaction Boundary를 너무 크게 만들면 어떤 문제가 생길 수 있는가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 23,
+      "text": "Atomicity와 Consistency는 무엇이 다른가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 24,
+      "text": "ACID의 Consistency는 무엇을 의미하는가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 25,
+      "text": "Isolation Level을 무조건 높이는 것이 좋은가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 26,
+      "text": "Dirty Read는 무엇인가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 27,
+      "text": "Non-repeatable Read와 Phantom Read는 무엇이 다른가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 28,
+      "text": "Transaction만 사용하면 Lost Update가 자동으로 해결되는가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 29,
+      "text": "Optimistic Lock과 Pessimistic Lock은 언제 선택하는가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 30,
+      "text": "Commit 이후 Database 장애가 발생해도 데이터가 남아야 하는 이유는 무엇인가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 31,
+      "text": "외부 API 호출까지 Database Transaction으로 묶을 수 있는가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 32,
+      "text": "Dual Write는 왜 위험한가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 33,
+      "text": "2PC는 어떤 문제를 해결하고 어떤 비용이 있는가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 34,
+      "text": "Saga와 Database Rollback은 무엇이 다른가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 35,
+      "text": "Outbox Pattern이 필요한 이유는 무엇인가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 36,
+      "text": "AI Agent의 여러 Tool 실행을 하나의 작업으로 관리하려면 무엇이 필요한가?",
+      "topic": "transaction",
+      "stage": 0,
+      "due": "2026-08-13",
+      "added": "2026-08-13",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 37,
+      "text": "분산 트랜잭션에서 2PC 대신 Saga 패턴을 쓰는 이유는 무엇인가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-14",
+      "added": "2026-08-14",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 38,
+      "text": "보상 트랜잭션은 DB ROLLBACK과 무엇이 다른가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-14",
+      "added": "2026-08-14",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 39,
+      "text": "Saga의 Choreography와 Orchestration은 어떤 상황에서 다른가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-14",
+      "added": "2026-08-14",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 40,
+      "text": "Saga가 격리성을 보장하지 못해 생기는 문제와 완화 방법은 무엇인가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-14",
+      "added": "2026-08-14",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 41,
+      "text": "보상 트랜잭션이 실패하면 어떻게 처리해야 하는가?",
+      "topic": "messaging",
+      "stage": 0,
+      "due": "2026-08-14",
+      "added": "2026-08-14",
+      "graduated": false,
+      "history": []
+    }
+  ],
+  "next_id": 42,
+  "topics": {
+    "messaging": {
+      "axes": [
+        {
+          "name": "통신 모델 (동기 vs 비동기)",
+          "questions": [
+            1
+          ]
+        },
+        {
+          "name": "역할 분리 (Producer / Consumer)",
+          "questions": [
+            19
+          ]
+        },
+        {
+          "name": "메시징 토폴로지 (Queue vs Pub/Sub vs Topic)",
+          "questions": [
+            2,
+            20
+          ]
+        },
+        {
+          "name": "전달 확인 메커니즘 (ACK)",
+          "questions": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "전달 보장 시맨틱 (delivery semantics)",
+          "questions": [
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "name": "멱등성 (idempotency)",
+          "questions": [
+            8,
+            18
+          ]
+        },
+        {
+          "name": "실패 처리 (retry / backoff / DLQ)",
+          "questions": [
+            9,
+            10
+          ]
+        },
+        {
+          "name": "메시지 순서 보장 (ordering)",
+          "questions": [
+            11
+          ]
+        },
+        {
+          "name": "스키마 진화 (schema evolution)",
+          "questions": [
+            12
+          ]
+        },
+        {
+          "name": "이중 쓰기 문제 (dual write)",
+          "questions": [
+            13
+          ]
+        },
+        {
+          "name": "Outbox 패턴",
+          "questions": [
+            14,
+            15
+          ]
+        },
+        {
+          "name": "Inbox 패턴 / 소비자측 중복 제거",
+          "questions": [
+            16
+          ]
+        },
+        {
+          "name": "운영/관측 (backpressure, lag 진단)",
+          "questions": [
+            17
+          ]
+        },
+        {
+          "name": "Saga 패턴 (분산 트랜잭션 보상)",
+          "questions": [
+            37,
+            38,
+            39,
+            40,
+            41
+          ]
+        }
+      ],
+      "uncovered": [
+        "브로커 종류별 특성 (Kafka log vs RabbitMQ queue vs SQS)",
+        "Consumer Group / 파티션 리밸런싱",
+        "이벤트 소싱(Event Sourcing)과 CQRS",
+        "메시지 압축·직렬화 포맷 (Avro/Protobuf)",
+        "브로커 내구성·복제 (replication, ISR)"
+      ],
+      "analyzed_at": "2026-08-14"
+    },
+    "transaction": {
+      "axes": [
+        {
+          "name": "트랜잭션의 존재 이유 / 경계(boundary)",
+          "questions": [
+            21,
+            22
+          ]
+        },
+        {
+          "name": "ACID — Atomicity",
+          "questions": [
+            23
+          ]
+        },
+        {
+          "name": "ACID — Consistency",
+          "questions": [
+            23,
+            24
+          ]
+        },
+        {
+          "name": "ACID — Isolation & 격리 수준",
+          "questions": [
+            25
+          ]
+        },
+        {
+          "name": "ACID — Durability",
+          "questions": [
+            30
+          ]
+        },
+        {
+          "name": "격리 이상 현상 (Dirty/Non-repeatable/Phantom)",
+          "questions": [
+            26,
+            27
+          ]
+        },
+        {
+          "name": "동시성 제어 — Lost Update / 잠금 전략",
+          "questions": [
+            28,
+            29
+          ]
+        },
+        {
+          "name": "트랜잭션의 한계 (외부 IO를 못 묶음)",
+          "questions": [
+            31
+          ]
+        },
+        {
+          "name": "이중 쓰기 문제 (dual write)",
+          "questions": [
+            32
+          ]
+        },
+        {
+          "name": "분산 트랜잭션 — 2PC",
+          "questions": [
+            33
+          ]
+        },
+        {
+          "name": "분산 트랜잭션 — Saga / 보상",
+          "questions": [
+            34
+          ]
+        },
+        {
+          "name": "Outbox 패턴",
+          "questions": [
+            35
+          ]
+        },
+        {
+          "name": "다단계 작업의 원자성 (AI Agent tool 오케스트레이션)",
+          "questions": [
+            36
+          ]
+        }
+      ],
+      "uncovered": [
+        "MVCC (다중 버전 동시성 제어)의 동작 원리",
+        "잠금 종류 (shared/exclusive, row/table, gap lock)",
+        "데드락 탐지·회피",
+        "격리 수준별 실제 구현 차이 (DB벤더별)",
+        "Savepoint / 중첩 트랜잭션 / 전파(propagation)",
+        "트랜잭션 로그 (WAL) 와 복구",
+        "Idempotency / Inbox (소비자측 중복 제거)"
+      ],
+      "analyzed_at": "2026-08-13"
+    }
+  }
+}
