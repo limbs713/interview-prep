@@ -593,9 +593,49 @@
       "added": "2026-08-24",
       "graduated": false,
       "history": []
+    },
+    {
+      "id": 47,
+      "text": "Cache-Aside 읽기에서 캐시 hit와 miss일 때 각각 무슨 일이 일어나는지 설명하라.",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 48,
+      "text": "Cache-Aside에서 데이터가 갱신될 때, 캐시를 새 값으로 갱신하지 않고 삭제하는 이유는 무엇인가?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 49,
+      "text": "캐시 키에 TTL을 거는 두 가지 이유는 무엇인가?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 50,
+      "text": "Cache-Aside와 Write-Through의 차이와 각각의 트레이드오프는 무엇인가?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
     }
   ],
-  "next_id": 47,
+  "next_id": 51,
   "topics": {
     "messaging": {
       "axes": [
@@ -831,13 +871,25 @@
           "questions": [
             46
           ]
+        },
+        {
+          "name": "Cache-Aside 패턴",
+          "questions": [
+            47,
+            50
+          ]
+        },
+        {
+          "name": "캐시 쓰기 정합성 (delete-on-write, TTL)",
+          "questions": [
+            48,
+            49
+          ]
         }
       ],
       "uncovered": [
         "List / 큐 활용 (BRPOP)",
         "Set / 집합 연산",
-        "Cache-Aside 패턴",
-        "캐시 쓰기 정합성 (delete-on-write)",
         "세션 스토어",
         "Rate Limiting",
         "분산 락 (SET NX)",
