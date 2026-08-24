@@ -543,9 +543,59 @@
       "added": "2026-08-14",
       "graduated": false,
       "history": []
+    },
+    {
+      "id": 42,
+      "text": "Redis가 디스크 기반 DB보다 빠른 근본 이유는 무엇인가?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 43,
+      "text": "String의 INCR이 여러 클라이언트가 동시에 호출해도 값이 유실되지 않는 이유는 무엇인가?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 44,
+      "text": "실시간 리더보드를 List가 아닌 Sorted Set으로 구현해야 하는 이유를 시간복잡도로 설명하라.",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 45,
+      "text": "사용자 객체를 String에 JSON으로 통째로 저장하는 것과 Hash로 저장하는 것의 차이와 각각의 장단점은?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
+    },
+    {
+      "id": 46,
+      "text": "순 방문자 수를 Set 대신 HyperLogLog로 세는 이유와 그 트레이드오프는 무엇인가?",
+      "topic": "redis",
+      "stage": 0,
+      "due": "2026-08-24",
+      "added": "2026-08-24",
+      "graduated": false,
+      "history": []
     }
   ],
-  "next_id": 42,
+  "next_id": 47,
   "topics": {
     "messaging": {
       "axes": [
@@ -749,6 +799,61 @@
         "Idempotency / Inbox (소비자측 중복 제거)"
       ],
       "analyzed_at": "2026-08-13"
+    },
+    "redis": {
+      "axes": [
+        {
+          "name": "In-Memory 원리 (왜 빠른가)",
+          "questions": [
+            42
+          ]
+        },
+        {
+          "name": "원자적 연산 & 싱글스레드 기초",
+          "questions": [
+            43
+          ]
+        },
+        {
+          "name": "Sorted Set / 실시간 랭킹",
+          "questions": [
+            44
+          ]
+        },
+        {
+          "name": "Hash / 객체 모델링",
+          "questions": [
+            45
+          ]
+        },
+        {
+          "name": "확률적 자료구조 (HyperLogLog)",
+          "questions": [
+            46
+          ]
+        }
+      ],
+      "uncovered": [
+        "List / 큐 활용 (BRPOP)",
+        "Set / 집합 연산",
+        "Cache-Aside 패턴",
+        "캐시 쓰기 정합성 (delete-on-write)",
+        "세션 스토어",
+        "Rate Limiting",
+        "분산 락 (SET NX)",
+        "Pub/Sub vs Stream",
+        "Cache Penetration",
+        "Cache Avalanche",
+        "Cache Stampede / Hot Key",
+        "O(N) 명령 & SCAN",
+        "Big Key & UNLINK",
+        "메모리 eviction 정책",
+        "영속성 (RDB vs AOF)",
+        "Replication (비동기 복제)",
+        "Sentinel / failover",
+        "Cluster / 해시 슬롯"
+      ],
+      "analyzed_at": "2026-08-24"
     }
   }
 }
